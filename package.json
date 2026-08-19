@@ -31,5 +31,16 @@
       "工具"
     ],
     "v3": true
+  },
+  "SevenXCheckIn": {
+    "name": "7x.hk 每日签到",
+    "description": "7x.hk (New API 站点) 每天定时多账号签到并汇总余额获得额度推送通知",
+    "version": "0.1.0",
+    "author": "fnos",
+    "labels": [
+      "签到",
+      "工具"
+    ],
+    "v3": true
   }
 }
