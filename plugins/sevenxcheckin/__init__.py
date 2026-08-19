@@ -351,17 +351,21 @@ class SevenXCheckIn(_PluginBase):
             q_after = q_before
         added = (q_after or 0) - (q_before or 0)
 
+        # New API 系站点：今日已签到时常返回 success=false，仅凭 success 判定会误判为失败
+        if "已签到" in chk_msg:
+            return {"username": username, "status": "already",
+                    "added_quota": 0, "quota_after": q_after or 0,
+                    "used_quota": used_after or 0, "message": chk_msg or "今日已签到",
+                    "meta": meta}
         if chk.get("success"):
-            status = "already" if "已签到" in chk_msg else "success"
-            return {"username": username, "status": status,
+            return {"username": username, "status": "success",
                     "added_quota": max(added, 0), "quota_after": q_after or 0,
                     "used_quota": used_after or 0, "message": chk_msg or "签到成功",
                     "meta": meta}
-        else:
-            return {"username": username, "status": "failed",
-                    "added_quota": 0, "quota_after": q_after or 0,
-                    "used_quota": used_after or 0,
-                    "message": chk_msg or "签到失败"}
+        return {"username": username, "status": "failed",
+                "added_quota": 0, "quota_after": q_after or 0,
+                "used_quota": used_after or 0,
+                "message": chk_msg or "签到失败"}
 
     def __fetch_self(self, req, user_id):
         _, d = req("GET", "/api/user/self", user_id=user_id)
