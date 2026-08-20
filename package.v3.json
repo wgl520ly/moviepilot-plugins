@@ -72,5 +72,21 @@
       "0.1.0": "7x.hk（New API 站点）多账号每日签到；cookie + New-Api-User 双认证；美元额度展示（quota_per_unit 动态获取）"
     },
     "icon": "https://raw.githubusercontent.com/wgl520ly/moviepilot-plugins/main/icons/SevenXCheckIn.png"
+  },
+  "WakeOnLan": {
+    "name": "局域网远程唤醒 (WakeOnLan)",
+    "description": "通过 Wake-on-LAN 魔术包远程唤醒局域网内电脑/设备；支持多设备、插件按钮、聊天命令、HTTP 接口与定时自动开机",
+    "version": "0.1.0",
+    "author": "wgl520ly",
+    "labels": [
+      "工具",
+      "运维"
+    ],
+    "v3": true,
+    "release": true,
+    "icon": "https://raw.githubusercontent.com/wgl520ly/moviepilot-plugins/main/icons/WakeOnLan.png",
+    "history": {
+      "0.1.0": "首发：局域网远程唤醒（WOL 魔术包）；多设备配置（名称|MAC|广播|IP）；插件详情页按钮逐个/全部唤醒；聊天命令 /wol 与 /wol_list；HTTP 接口 wake/wake_all/devices；定时自动开机；在线状态 ping 探测；站内通知"
+    }
   }
 }
