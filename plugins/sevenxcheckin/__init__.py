@@ -171,7 +171,13 @@ class SevenXCheckIn(_PluginBase):
             icon = "✅" if a.get("status") in ("success", "already") else "❌"
             tag = "已签到" if a.get("status") == "already" else ("成功" if a.get("status") == "success" else "失败")
             msg = a.get("message") or ""
-            lines.append(f"　{icon} {a.get('username')} · {tag}（{msg}）")
+            m = a.get("meta") or {}
+            extra = ""
+            if a.get("quota_after"):
+                extra = f" · 💰 余额 {self.__fmt_money(a.get('quota_after') or 0, m)}"
+            if a.get("status") in ("success", "already") and a.get("added_quota"):
+                extra += f" · 📈 获得 {self.__fmt_money(a.get('added_quota') or 0, m)}"
+            lines.append(f"　{icon} {a.get('username')} · {tag}（{msg}）{extra}")
 
         cards.append({"component": "VCard", "props": {"variant": "elevated", "elevation": 2, "rounded": "lg", "class": "mb-4"}, "content": [
             {"component": "VCardTitle", "props": {"class": "text-h6 font-weight-bold"}, "text": "今日明细"},
@@ -410,9 +416,12 @@ class SevenXCheckIn(_PluginBase):
             money_balance = self.__fmt_money(r.get("quota_after") or 0, meta)
             if r["status"] in ("success", "already"):
                 lines.append(f"　📈 本次获得：{money_added}")
-                lines.append(f"　💰 当前余额：{money_balance}")
+                if r.get("quota_after"):
+                    lines.append(f"　💰 当前余额：{money_balance}")
             else:
                 lines.append(f"　⚠️ {r.get('message') or '失败原因未知'}")
+                if r.get("quota_after"):
+                    lines.append(f"　💰 当前余额：{money_balance}")
             lines.append("")
             if r["status"] in ("success", "already"):
                 total_added += int(r.get("added_quota") or 0)
