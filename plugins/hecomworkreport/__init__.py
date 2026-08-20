@@ -35,10 +35,11 @@ class HecomWorkReport(_PluginBase):
 
     plugin_name = "红圈工作报告查询"
     plugin_desc = "每天21:30查询红圈（cloud.hecom.cn）当天工作报告日提交情况，统计已提交/未提交人员并推送通知"
-    plugin_version = "0.1.1"
+    plugin_version = "0.1.2"
     plugin_author = "wgl520ly"
     author_url = "https://github.com/wgl520ly"
     repo_url = "https://github.com/wgl520ly/moviepilot-plugins"
+    plugin_icon = "https://raw.githubusercontent.com/wgl520ly/moviepilot-plugins/main/icons/HecomWorkReport.png"
 
     plugin_order = 96
     auth_level = 1

@@ -30,10 +30,11 @@ class NewApiCheckIn(_PluginBase):
     # ===== 插件元信息 =====
     plugin_name = "DGB公益站签到"
     plugin_desc = "DGB 公益站（freeapi.dgbmc.top）多账号每日签到，记录签到获得的额度、当前余额与状态"
-    plugin_version = "0.2.4"
+    plugin_version = "0.2.5"
     plugin_author = "wgl520ly"
     author_url = "https://github.com/wgl520ly"
     repo_url = "https://github.com/wgl520ly/moviepilot-plugins"
+    plugin_icon = "https://raw.githubusercontent.com/wgl520ly/moviepilot-plugins/main/icons/NewApiCheckIn.png"
 
     plugin_order = 98
     auth_level = 1

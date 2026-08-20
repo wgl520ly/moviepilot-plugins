@@ -28,10 +28,11 @@ class SevenXCheckIn(_PluginBase):
 
     plugin_name = "7x.hk 每日签到"
     plugin_desc = "每天定时访问 7x.hk (New API 站点)，对配置账号逐一完成每日签到并汇总余额/获得额度推送通知"
-    plugin_version = "0.1.1"
+    plugin_version = "0.1.2"
     plugin_author = "wgl520ly"
     author_url = "https://github.com/wgl520ly"
     repo_url = "https://github.com/wgl520ly/moviepilot-plugins"
+    plugin_icon = "https://raw.githubusercontent.com/wgl520ly/moviepilot-plugins/main/icons/SevenXCheckIn.png"
 
     plugin_order = 95
     auth_level = 1

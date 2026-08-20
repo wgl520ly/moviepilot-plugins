@@ -2,7 +2,7 @@
   "NewApiCheckIn": {
     "name": "DGB公益站签到",
     "description": "DGB 公益站（freeapi.dgbmc.top）多账号每日签到，记录签到获得的额度、当前余额与状态",
-    "version": "0.2.4",
+    "version": "0.2.5",
     "author": "wgl520ly",
     "labels": [
       "签到",
@@ -11,16 +11,18 @@
     "v3": true,
     "release": true,
     "history": {
+      "0.2.5": "新增站点图标（DGB 官网 Logo）；补充更新版本说明",
       "0.2.4": "补充作者链接与项目主页（GitHub）；支持 GitHub Release 渠道发布与更新",
       "0.2.3": "优化签到通知内容，逐账号展示额度与余额",
       "0.2.0": "多账号每日签到（freeapi.dgbmc.top），额度/当前余额展示，每日签到结果通知",
       "0.1.0": "DGB 公益站基础签到功能"
-    }
+    },
+    "icon": "https://raw.githubusercontent.com/wgl520ly/moviepilot-plugins/main/icons/NewApiCheckIn.png"
   },
   "MmkgCheckIn": {
     "name": "MMKG公共节点站签到",
     "description": "MMKG 公共节点站（api.mmkg.cloud）多账号每日签到，记录签到获得的咪币额度、当前余额与状态",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "author": "wgl520ly",
     "labels": [
       "签到",
@@ -29,14 +31,16 @@
     "v3": true,
     "release": true,
     "history": {
+      "0.1.2": "新增站点图标（MMKG 站点图标）；补充更新版本说明",
       "0.1.1": "补充作者链接与项目主页（GitHub）；支持 GitHub Release 渠道发布与更新",
       "0.1.0": "多账号每日签到（api.mmkg.cloud），咪币额度/当前余额展示，每日签到结果通知"
-    }
+    },
+    "icon": "https://raw.githubusercontent.com/wgl520ly/moviepilot-plugins/main/icons/MmkgCheckIn.png"
   },
   "HecomWorkReport": {
     "name": "红圈工作报告查询",
     "description": "每天21:30查询红圈（cloud.hecom.cn）当天工作报告日提交情况，统计已提交/未提交人员并推送通知",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "author": "wgl520ly",
     "labels": [
       "工作报告",
@@ -45,14 +49,16 @@
     "v3": true,
     "release": true,
     "history": {
+      "0.1.2": "新增站点图标（红圈官网图标）；补充更新版本说明",
       "0.1.1": "补充作者链接与项目主页（GitHub）；支持 GitHub Release 渠道发布与更新",
       "0.1.0": "每天 21:30 查询红圈（cloud.hecom.cn）当天工作报告日提交情况；已提交/未提交名单统计；分块通知（✅❌统计/已提交/未提交⚠️/温馨提醒）；插件详情页汇总卡片"
-    }
+    },
+    "icon": "https://raw.githubusercontent.com/wgl520ly/moviepilot-plugins/main/icons/HecomWorkReport.png"
   },
   "SevenXCheckIn": {
     "name": "7x.hk 每日签到",
     "description": "7x.hk (New API 站点) 每天定时多账号签到并汇总余额获得额度推送通知",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "author": "wgl520ly",
     "labels": [
       "签到",
@@ -61,8 +67,10 @@
     "v3": true,
     "release": true,
     "history": {
+      "0.1.2": "新增站点图标（7x.hk 官网 Logo）；补充更新版本说明",
       "0.1.1": "修复「今日已签到」被误判为失败（New API 系站点已签到返回 success=false）；通知展示本次获得/当前余额/今日合计，失败也显示余额；详情页明细显示💰余额📈获得；补充 GitHub 作者/主页链接；支持 Release 渠道更新",
       "0.1.0": "7x.hk（New API 站点）多账号每日签到；cookie + New-Api-User 双认证；美元额度展示（quota_per_unit 动态获取）"
-    }
+    },
+    "icon": "https://raw.githubusercontent.com/wgl520ly/moviepilot-plugins/main/icons/SevenXCheckIn.png"
   }
 }
