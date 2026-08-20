@@ -2,45 +2,49 @@
   "NewApiCheckIn": {
     "name": "DGB公益站签到",
     "description": "DGB 公益站（freeapi.dgbmc.top）多账号每日签到，记录签到获得的额度、当前余额与状态",
-    "version": "0.2.3",
-    "author": "fnos",
+    "version": "0.2.4",
+    "author": "wgl520ly",
     "labels": [
       "签到",
       "工具"
     ],
-    "v3": true
+    "v3": true,
+    "release": true
   },
   "MmkgCheckIn": {
     "name": "MMKG公共节点站签到",
     "description": "MMKG 公共节点站（api.mmkg.cloud）多账号每日签到，记录签到获得的咪币额度、当前余额与状态",
-    "version": "0.1.0",
-    "author": "fnos",
+    "version": "0.1.1",
+    "author": "wgl520ly",
     "labels": [
       "签到",
       "工具"
     ],
-    "v3": true
+    "v3": true,
+    "release": true
   },
   "HecomWorkReport": {
     "name": "红圈工作报告查询",
     "description": "每天21:30查询红圈（cloud.hecom.cn）当天工作报告日提交情况，统计已提交/未提交人员并推送通知",
-    "version": "0.1.0",
-    "author": "fnos",
+    "version": "0.1.1",
+    "author": "wgl520ly",
     "labels": [
       "工作报告",
       "工具"
     ],
-    "v3": true
+    "v3": true,
+    "release": true
   },
   "SevenXCheckIn": {
     "name": "7x.hk 每日签到",
     "description": "7x.hk (New API 站点) 每天定时多账号签到并汇总余额获得额度推送通知",
-    "version": "0.1.0",
-    "author": "fnos",
+    "version": "0.1.1",
+    "author": "wgl520ly",
     "labels": [
       "签到",
       "工具"
     ],
-    "v3": true
+    "v3": true,
+    "release": true
   }
 }

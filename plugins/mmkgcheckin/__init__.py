@@ -30,8 +30,11 @@ class MmkgCheckIn(_PluginBase):
     # ===== 插件元信息 =====
     plugin_name = "MMKG公共节点站签到"
     plugin_desc = "MMKG 公共节点站（api.mmkg.cloud）多账号每日签到，记录签到获得的咪币额度、当前余额与状态"
-    plugin_version = "0.1.0"
-    plugin_author = "fnos"
+    plugin_version = "0.1.1"
+    plugin_author = "wgl520ly"
+    author_url = "https://github.com/wgl520ly"
+    repo_url = "https://github.com/wgl520ly/moviepilot-plugins"
+
     plugin_order = 97
     auth_level = 1
     plugin_config_prefix = "mmkgcheckin_"
