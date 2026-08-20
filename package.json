@@ -9,7 +9,13 @@
       "工具"
     ],
     "v3": true,
-    "release": true
+    "release": true,
+    "history": {
+      "0.2.4": "补充作者链接与项目主页（GitHub）；支持 GitHub Release 渠道发布与更新",
+      "0.2.3": "优化签到通知内容，逐账号展示额度与余额",
+      "0.2.0": "多账号每日签到（freeapi.dgbmc.top），额度/当前余额展示，每日签到结果通知",
+      "0.1.0": "DGB 公益站基础签到功能"
+    }
   },
   "MmkgCheckIn": {
     "name": "MMKG公共节点站签到",
@@ -21,7 +27,11 @@
       "工具"
     ],
     "v3": true,
-    "release": true
+    "release": true,
+    "history": {
+      "0.1.1": "补充作者链接与项目主页（GitHub）；支持 GitHub Release 渠道发布与更新",
+      "0.1.0": "多账号每日签到（api.mmkg.cloud），咪币额度/当前余额展示，每日签到结果通知"
+    }
   },
   "HecomWorkReport": {
     "name": "红圈工作报告查询",
@@ -33,7 +43,11 @@
       "工具"
     ],
     "v3": true,
-    "release": true
+    "release": true,
+    "history": {
+      "0.1.1": "补充作者链接与项目主页（GitHub）；支持 GitHub Release 渠道发布与更新",
+      "0.1.0": "每天 21:30 查询红圈（cloud.hecom.cn）当天工作报告日提交情况；已提交/未提交名单统计；分块通知（✅❌统计/已提交/未提交⚠️/温馨提醒）；插件详情页汇总卡片"
+    }
   },
   "SevenXCheckIn": {
     "name": "7x.hk 每日签到",
@@ -45,6 +59,10 @@
       "工具"
     ],
     "v3": true,
-    "release": true
+    "release": true,
+    "history": {
+      "0.1.1": "修复「今日已签到」被误判为失败（New API 系站点已签到返回 success=false）；通知展示本次获得/当前余额/今日合计，失败也显示余额；详情页明细显示💰余额📈获得；补充 GitHub 作者/主页链接；支持 Release 渠道更新",
+      "0.1.0": "7x.hk（New API 站点）多账号每日签到；cookie + New-Api-User 双认证；美元额度展示（quota_per_unit 动态获取）"
+    }
   }
 }
