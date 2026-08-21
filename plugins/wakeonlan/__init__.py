@@ -367,8 +367,52 @@ class WakeOnLan(_PluginBase):
             })
         token = settings.API_TOKEN or ""
         params = "?apikey=%s" % token if token else ""
+        add_form = [
+            {
+                "component": "VCard",
+                "props": {"variant": "outlined", "class": "pa-3 mb-3"},
+                "content": [
+                    {
+                        "component": "VRow",
+                        "content": [
+                            {"component": "VCol", "props": {"cols": 12, "md": 3}, "content": [
+                                {"component": "VTextField", "props": {"model": "dev_name", "label": "名称", "placeholder": "如 书房电脑"}}]},
+                            {"component": "VCol", "props": {"cols": 12, "md": 3}, "content": [
+                                {"component": "VTextField", "props": {"model": "dev_mac", "label": "MAC", "placeholder": "AA:BB:CC:DD:EE:FF"}}]},
+                            {"component": "VCol", "props": {"cols": 12, "md": 3}, "content": [
+                                {"component": "VTextField", "props": {"model": "dev_broadcast", "label": "广播地址", "placeholder": "255.255.255.255"}}]},
+                            {"component": "VCol", "props": {"cols": 12, "md": 3}, "content": [
+                                {"component": "VTextField", "props": {"model": "dev_ip", "label": "IP（在线探测）", "placeholder": "192.168.1.66"}}]},
+                        ],
+                    },
+                    {
+                        "component": "VRow",
+                        "content": [
+                            {"component": "VCol", "props": {"cols": 12}, "content": [
+                                {
+                                    "component": "VBtn",
+                                    "props": {"color": "primary", "prepend-icon": "mdi-plus", "block": True},
+                                    "text": "添加设备",
+                                    "events": {"click": {
+                                        "api": "plugin/WakeOnLan/device_add" + params,
+                                        "method": "get",
+                                        "params": {"name": "dev_name", "mac": "dev_mac", "broadcast": "dev_broadcast", "ip": "dev_ip"}
+                                    }}
+                                }
+                            ]}
+                        ],
+                    },
+                    {
+                        "component": "VCol", "props": {"cols": 12}, "content": [
+                            {"component": "VAlert", "props": {"type": "info", "variant": "tonal", "dense": True},
+                             "content": [{"component": "text", "text": "填写后点击添加设备，自动保存进插件配置。唤醒前请开启电脑 BIOS 的 Wake-on-LAN。"}]}
+                        ]
+                    }
+                ]
+            }
+        ]
         if not devices:
-            return [
+            return add_form + [
                 {
                     "component": "VCard",
                     "props": {"style": "padding: 16px;"},
@@ -400,7 +444,7 @@ class WakeOnLan(_PluginBase):
                     "events": {"click": {"api": "plugin/WakeOnLan/wake?name=%s%s" % (d["name"], params), "method": "get"}},
                 }
             )
-        return [
+        return add_form + [
             {
                 "component": "VRow",
                 "content": [
