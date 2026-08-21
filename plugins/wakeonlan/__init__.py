@@ -19,6 +19,7 @@ import socket
 import subprocess
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
+from urllib.parse import quote as _q
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
@@ -292,6 +293,18 @@ class WakeOnLan(_PluginBase):
                 "methods": ["GET"],
                 "summary": "查看已配置设备列表",
             },
+            {
+                "path": "/device_remove",
+                "endpoint": self.api_device_remove,
+                "methods": ["GET"],
+                "summary": "删除一个设备（name 参数）",
+            },
+            {
+                "path": "/device_add",
+                "endpoint": self.api_device_add,
+                "methods": ["GET"],
+                "summary": "添加一个设备（name, mac, broadcast, ip 参数）",
+            },
         ]
 
     def api_wake(self, name: str = "") -> dict:
@@ -316,6 +329,27 @@ class WakeOnLan(_PluginBase):
                 "status": status,
             })
         return {"success": True, "data": rows}
+
+    def api_device_remove(self, name: str = "") -> dict:
+        if not name:
+            return {"success": False, "msg": "缺少 name 参数"}
+        lines = [ln for ln in self._devices.splitlines() if ln.strip() and not ln.strip().startswith("#")]
+        kept = [ln for ln in lines if ln.split("|", 1)[0].strip() != name]
+        self._devices = "\n".join(kept)
+        self.__update_config()
+        return {"success": True, "msg": "删除设备：%s" % name, "devices": self._devices}
+
+    def api_device_add(self, name: str = "", mac: str = "", broadcast: str = "", ip: str = "") -> dict:
+        if not name or not self.__is_valid_mac(mac):
+            return {"success": False, "msg": "参数错误：name 和合法的 mac 必填"}
+        broadcast = broadcast or "255.255.255.255"
+        line = f"{name}|{mac}|{broadcast}|{ip}"
+        lines = [ln for ln in self._devices.splitlines() if ln.strip()]
+        if any(ln.split("|", 1)[0].strip() == name for ln in lines):
+            return {"success": False, "msg": "设备已存在：%s" % name}
+        self._devices = "\n".join(lines + [line])
+        self.__update_config()
+        return {"success": True, "msg": "添加设备：%s" % name, "devices": self._devices}
 
     # ---------- 页面 ----------
     def get_page(self) -> List[dict]:
@@ -408,6 +442,7 @@ class WakeOnLan(_PluginBase):
                                             {"component": "th", "text": "广播地址"},
                                             {"component": "th", "text": "IP 地址"},
                                             {"component": "th", "text": "状态"},
+                                            {"component": "th", "text": "操作"},
                                         ],
                                     }
                                 ],
@@ -423,6 +458,11 @@ class WakeOnLan(_PluginBase):
                                             {"component": "td", "text": row["broadcast"]},
                                             {"component": "td", "text": row["ip"]},
                                             {"component": "td", "text": row["status"]},
+                                            {"component": "td", "content": [
+                                                {"component": "VBtn", "props": {"color": "error", "variant": "tonal", "size": "small", "prepend-icon": "mdi-delete"},
+                                                 "text": "删除",
+                                                 "events": {"click": {"api": "plugin/WakeOnLan/device_remove?name=" + _q(row["name"]) + params, "method": "get"}}},
+                                            ]},
                                         ],
                                     }
                                     for row in rows
