@@ -18,7 +18,7 @@ import re
 import socket
 import subprocess
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
@@ -435,38 +435,34 @@ class WakeOnLan(_PluginBase):
         ]
 
     # ---------- 表单 ----------
-    def get_form(self):
-        return [
-            {
-                "component": "VForm",
+    def get_form(self) -> Tuple[List[dict], Dict[str, Any]]:
+        # 兼容旧 MP：返回 (form_list, dict)；新版只读 form_list
+        return [{
+            "component": "VForm",
+            "content": [{
+                "component": "VRow",
                 "content": [
-                    {
-                        "component": "VRow",
-                        "content": [
-                            {"component": "VCol", "props": {"cols": 12, "md": 6}, "content": [
-                                {"component": "VSwitch", "props": {"model": "enabled", "label": "启用插件"}}]},
-                            {"component": "VCol", "props": {"cols": 12, "md": 6}, "content": [
-                                {"component": "VSwitch", "props": {"model": "onlyonce", "label": "保存后立即执行一次"}}]},
-                            {"component": "VCol", "props": {"cols": 12, "md": 6}, "content": [
-                                {"component": "VTextField", "props": {"model": "cron", "label": "定时自动唤醒 (cron)", "placeholder": "如 30 8 * * 1-5 工作日 8:30"}}]},
-                            {"component": "VCol", "props": {"cols": 12, "md": 6}, "content": [
-                                {"component": "VTextField", "props": {"model": "port", "label": "WOL 端口", "placeholder": "9"}}]},
-                            {"component": "VCol", "props": {"cols": 12, "md": 6}, "content": [
-                                {"component": "VSwitch", "props": {"model": "notify", "label": "发送站内通知"}}]},
-                            {"component": "VCol", "props": {"cols": 12, "md": 12}, "content": [
-                                {
-                                    "component": "VTextField",
-                                    "props": {
-                                        "model": "devices",
-                                        "label": "设备列表",
-                                        "type": "textarea",
-                                        "rows": 6,
-                                        "placeholder": "每行一个：设备名称|MAC地址|广播地址(可选)|IP地址(可选,用于在线状态)\n示例：书房电脑|AA:BB:CC:DD:EE:FF|192.168.1.255|192.168.1.66",
-                                    },
-                                }],
+                    {"component": "VCol", "props": {"cols": 12, "md": 6}, "content": [
+                        {"component": "VSwitch", "props": {"model": "enabled", "label": "启用插件"}}]},
+                    {"component": "VCol", "props": {"cols": 12, "md": 6}, "content": [
+                        {"component": "VSwitch", "props": {"model": "onlyonce", "label": "保存后立即执行一次"}}]},
+                    {"component": "VCol", "props": {"cols": 12, "md": 6}, "content": [
+                        {"component": "VTextField", "props": {"model": "cron", "label": "定时自动唤醒 (cron)", "placeholder": "如 30 8 * * 1-5 工作日 8:30"}}]},
+                    {"component": "VCol", "props": {"cols": 12, "md": 6}, "content": [
+                        {"component": "VTextField", "props": {"model": "port", "label": "WOL 端口", "placeholder": "9"}}]},
+                    {"component": "VCol", "props": {"cols": 12, "md": 6}, "content": [
+                        {"component": "VSwitch", "props": {"model": "notify", "label": "发送站内通知"}}]},
+                    {"component": "VCol", "props": {"cols": 12, "md": 12}, "content": [
+                        {
+                            "component": "VTextField",
+                            "props": {
+                                "model": "devices",
+                                "label": "设备列表",
+                                "type": "textarea",
+                                "rows": 6,
+                                "placeholder": "每行一个：设备名称|MAC地址|广播地址(可选)|IP地址(可选,用于在线状态)\n示例：书房电脑|AA:BB:CC:DD:EE:FF|192.168.1.255|192.168.1.66",
                             },
-                        ],
-                    }
+                        }]},
                 ],
-            }
-        ]
+            }]
+        }], {}
