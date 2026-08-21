@@ -88,5 +88,21 @@
     "history": {
       "0.1.0": "首发：局域网远程唤醒（WOL 魔术包）；多设备表格管理（唤醒/删除按钮）、聊天命令 /wol /wol_list、HTTP 接口 wake/wake_all/devices/device_add/device_remove、定时自动开机、IP 在线探测、站内通知"
     }
+  },
+  "QtCoolCheckin": {
+    "name": "晴辰云签到 (QtCoolCheckin)",
+    "description": "Playwright + ddddocr 自动签到晴辰云 gpt.qt.cool，多账号、滑动验证码自动识别",
+    "version": "0.1.0",
+    "author": "wgl520ly",
+    "labels": [
+      "工具",
+      "签到"
+    ],
+    "v3": true,
+    "release": true,
+    "icon": "https://raw.githubusercontent.com/wgl520ly/moviepilot-plugins/main/icons/QtCoolCheckin.png",
+    "history": {
+      "0.1.0": "首发：Playwright + ddddocr 自动签到晴辰云，多账号，滑动验证码自动识别"
+    }
   }
 }
