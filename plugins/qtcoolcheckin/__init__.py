@@ -57,6 +57,11 @@ class QtCoolCheckin(_PluginBase):
     _onlyonce: bool = False
     _timeout: int = 60
     _scheduler = None
+    _cached_balance: float = 0
+    _cached_streak: int = 0
+    _cached_total: int = 0
+    _cached_checked: bool = False
+    _cached_last_time: str = ""
 
     def init_plugin(self, config: dict = None):
         if config:
@@ -102,42 +107,151 @@ class QtCoolCheckin(_PluginBase):
             self._scheduler = None
 
     def get_state(self) -> dict:
+        keys = [k.strip() for k in self._keys.splitlines() if k.strip()]
         return {
             "enabled": self._enabled,
             "cron": self._cron,
-            "keys_count": len([k for k in self._keys.splitlines() if k.strip()]),
+            "keys_count": len(keys),
+            "keys_masked": [k[:8] + "..." + k[-4:] if len(k) > 12 else k[:8] + "..." for k in keys],
             "notify": self._notify,
             "onlyonce": self._onlyonce,
+            "balance": self._cached_balance,
+            "streak": self._cached_streak,
+            "total_checkins": self._cached_total,
+            "checked_today": self._cached_checked,
+            "last_checkin_time": self._cached_last_time,
         }
+
 
     def get_page(self) -> List[dict]:
         token = settings.API_TOKEN or ""
         params = "?apikey=%s" % token if token else ""
         keys = [k.strip() for k in self._keys.splitlines() if k.strip()]
-        return [
+        balance = self._cached_balance
+        streak = self._cached_streak
+        total = self._cached_total
+        checked = self._cached_checked
+        last_time = self._cached_last_time
+        checked_icon = "mdi-check-circle" if checked else "mdi-clock-outline"
+        checked_color = "success" if checked else "warning"
+        checked_text = "已签到" if checked else "未签到"
+        balance_str = "%.2f" % balance
+        streak_str = str(streak)
+        total_str = str(total)
+        config_info = "已配置 %d 个密钥 | 定时: %s | 通知: %s | 上次请求: %s" % (
+            len(keys), self._cron or "未设置", "开启" if self._notify else "关闭",
+            last_time[:19] if last_time else "无"
+        )
+        status_info = "今日状态: %s | 连续 %d 天 | 累计 %d 天" % (checked_text, streak, total)
+        balance_info = "余额: $%s | 每日签到 +$1.00" % balance_str
+
+        page = [
             {
                 "component": "VCard",
                 "props": {"variant": "outlined", "class": "pa-3 mb-3"},
                 "content": [
-                    {"component": "VAlert", "props": {"type": "info", "variant": "tonal"},
-                     "content": [{"component": "text", "text": "Playwright + ddddocr 自动签到晴辰云（gpt.qt.cool），滑动验证码自动识别。"}]},
-                    {"component": "VRow", "content": [
-                        {"component": "VCol", "props": {"cols": 12, "md": 6}, "content": [
-                            {"component": "VBtn", "props": {"color": "primary", "block": True, "variant": "tonal", "prepend-icon": "mdi-refresh"},
-                             "text": "立即签到全部",
-                             "events": {"click": {"api": "plugin/QtCoolCheckin/checkin" + params, "method": "get"}}}]},
-                        {"component": "VCol", "props": {"cols": 12, "md": 6}, "content": [
-                            {"component": "VBtn", "props": {"color": "info", "block": True, "variant": "tonal", "prepend-icon": "mdi-information"},
-                             "text": "查看状态",
-                             "events": {"click": {"api": "plugin/QtCoolCheckin/status" + params, "method": "get"}}}]},
+                    {"component": "VCardTitle", "props": {"class": "text-subtitle-1 font-weight-bold pb-0"},
+                     "content": [
+                         {"component": "Icon", "props": {"icon": "mdi-wallet", "size": "18", "class": "mr-1"}},
+                         {"component": "text", "text": "账户概览"},
+                     ]},
+                    {"component": "VCardText", "props": {"class": "pt-2"}, "content": [
+                        {"component": "VRow", "props": {"dense": True}, "content": [
+                            {"component": "VCol", "props": {"cols": 6, "sm": 3}, "content": [
+                                {"component": "div", "props": {"class": "text-center"}, "content": [
+                                    {"component": "div", "props": {"class": "text-h5 font-weight-bold text-primary"},
+                                     "content": [{"component": "text", "text": balance_str}]},
+                                    {"component": "div", "props": {"class": "text-caption text-medium-emphasis"},
+                                     "content": [{"component": "text", "text": "余额 (USD)"}]},
+                                ]},
+                            ]},
+                            {"component": "VCol", "props": {"cols": 6, "sm": 3}, "content": [
+                                {"component": "div", "props": {"class": "text-center"}, "content": [
+                                    {"component": "div", "props": {"class": "text-h5 font-weight-bold text-success"},
+                                     "content": [{"component": "text", "text": streak_str}]},
+                                    {"component": "div", "props": {"class": "text-caption text-medium-emphasis"},
+                                     "content": [{"component": "text", "text": "连续签到"}]},
+                                ]},
+                            ]},
+                            {"component": "VCol", "props": {"cols": 6, "sm": 3}, "content": [
+                                {"component": "div", "props": {"class": "text-center"}, "content": [
+                                    {"component": "div", "props": {"class": "text-h5 font-weight-bold text-info"},
+                                     "content": [{"component": "text", "text": total_str}]},
+                                    {"component": "div", "props": {"class": "text-caption text-medium-emphasis"},
+                                     "content": [{"component": "text", "text": "累计签到"}]},
+                                ]},
+                            ]},
+                            {"component": "VCol", "props": {"cols": 6, "sm": 3}, "content": [
+                                {"component": "div", "props": {"class": "text-center"}, "content": [
+                                    {"component": "Icon", "props": {"icon": checked_icon, "size": "28", "color": checked_color}},
+                                    {"component": "div", "props": {"class": "text-caption text-medium-emphasis"},
+                                     "content": [{"component": "text", "text": checked_text}]},
+                                ]},
+                            ]},
+                        ]},
                     ]},
-                    {"component": "VCol", "props": {"cols": 12}, "content": [
-                        {"component": "VAlert", "props": {"type": "success", "variant": "tonal", "dense": True},
-                         "content": [{"component": "text", "text": "已配置 %d 个密钥 | 定时: %s | 通知: %s" % (len(keys), self._cron or "未设置", "开启" if self._notify else "关闭")}]},
+                ],
+            },
+            {
+                "component": "VCard",
+                "props": {"variant": "outlined", "class": "pa-3 mb-3"},
+                "content": [
+                    {"component": "VCardTitle", "props": {"class": "text-subtitle-1 font-weight-bold pb-0"},
+                     "content": [
+                         {"component": "Icon", "props": {"icon": "mdi-calendar-check", "size": "18", "class": "mr-1"}},
+                         {"component": "text", "text": "签到信息"},
+                     ]},
+                    {"component": "VCardText", "content": [
+                        {"component": "VRow", "content": [
+                            {"component": "VCol", "props": {"cols": 12, "md": 6}, "content": [
+                                {"component": "VAlert", "props": {"type": checked_color, "variant": "tonal", "density": "compact"},
+                                 "content": [
+                                     {"component": "Icon", "props": {"icon": checked_icon, "size": "20", "class": "mr-2"}},
+                                     {"component": "text", "text": status_info},
+                                 ]},
+                            ]},
+                            {"component": "VCol", "props": {"cols": 12, "md": 6}, "content": [
+                                {"component": "VAlert", "props": {"type": "info", "variant": "tonal", "density": "compact"},
+                                 "content": [
+                                     {"component": "Icon", "props": {"icon": "mdi-cash", "size": "20", "class": "mr-2"}},
+                                     {"component": "text", "text": balance_info},
+                                 ]},
+                            ]},
+                            {"component": "VCol", "props": {"cols": 12}, "content": [
+                                {"component": "VAlert", "props": {"type": "surface", "variant": "outlined", "density": "compact"},
+                                 "content": [
+                                     {"component": "Icon", "props": {"icon": "mdi-information-outline", "size": "16", "class": "mr-2"}},
+                                     {"component": "text", "text": config_info},
+                                 ]},
+                            ]},
+                        ]},
+                    ]},
+                ],
+            },
+            {
+                "component": "VCard",
+                "props": {"variant": "outlined", "class": "pa-3"},
+                "content": [
+                    {"component": "VRow", "content": [
+                        {"component": "VCol", "props": {"cols": 12, "sm": 4}, "content": [
+                            {"component": "VBtn", "props": {"color": "success", "block": True, "variant": "flat", "prepend-icon": "mdi-check-bold", "size": "large"},
+                             "text": "立即签到全部",
+                             "events": {"click": {"api": "plugin/QtCoolCheckin/checkin" + params, "method": "get"}}},
+                        ]},
+                        {"component": "VCol", "props": {"cols": 12, "sm": 4}, "content": [
+                            {"component": "VBtn", "props": {"color": "info", "block": True, "variant": "tonal", "prepend-icon": "mdi-sync"},
+                             "text": "刷新状态",
+                             "events": {"click": {"api": "plugin/QtCoolCheckin/status" + params, "method": "get"}}},
+                        ]},
+                        {"component": "VCol", "props": {"cols": 12, "sm": 4}, "content": [
+                            {"component": "VBtn", "props": {"color": "primary", "block": True, "variant": "outlined", "prepend-icon": "mdi-cog", "href": "/?tab=plugin-setting"},
+                             "text": "配置"},
+                        ]},
                     ]},
                 ],
             },
         ]
+        return page
 
     def get_form(self) -> Tuple[List[dict], Dict[str, Any]]:
         return [{
@@ -192,7 +306,26 @@ class QtCoolCheckin(_PluginBase):
         return {"success": result.get("success", False), "data": result}
 
     def api_status(self) -> dict:
+        """获取实时签到状态（从网站拉取）"""
         keys = [k.strip() for k in self._keys.splitlines() if k.strip()]
+        if not keys:
+            return {"success": True, "data": {"keys_count": 0}}
+
+        # 用第一个密钥获取状态
+        try:
+            import asyncio as _aio
+            loop = _aio.new_event_loop()
+            info = loop.run_until_complete(self._fetch_account_info(keys[0]))
+            loop.close()
+            if info:
+                self._cached_balance = info.get("balance", 0)
+                self._cached_streak = info.get("streak", 0)
+                self._cached_total = info.get("total_checkins", 0)
+                self._cached_checked = info.get("checked_today", False)
+                self._cached_last_time = info.get("last_used", "")
+        except Exception as e:
+            logger.warning(f"[QtCoolCheckin] 获取状态失败: {e}")
+
         return {
             "success": True,
             "data": {
@@ -200,8 +333,78 @@ class QtCoolCheckin(_PluginBase):
                 "cron": self._cron,
                 "keys_count": len(keys),
                 "notify": self._notify,
+                "balance": self._cached_balance,
+                "streak": self._cached_streak,
+                "total_checkins": self._cached_total,
+                "checked_today": self._cached_checked,
+                "last_checkin_time": self._cached_last_time,
             }
         }
+
+    async def _fetch_account_info(self, key: str) -> dict:
+        """从网站获取账号信息"""
+        if not async_playwright:
+            return {}
+        async with async_playwright() as pw:
+            browser = await pw.chromium.launch(
+                headless=True,
+                args=['--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage',
+                      '--dns-servers=8.8.8.8,8.8.4.4']
+            )
+            ctx = await browser.new_context(
+                user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+                locale='zh-CN'
+            )
+            page = await ctx.new_page()
+            try:
+                await page.goto('https://gpt.qt.cool/checkin', wait_until='networkidle', timeout=30000)
+                await page.wait_for_timeout(1500)
+                await page.evaluate('''
+                    async (key) => {
+                        await fetch('/portal/login', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({key})
+                        });
+                    }
+                ''', key)
+                await page.wait_for_timeout(500)
+
+                # 获取签到状态
+                status = await page.evaluate('''async () => {
+                    const r = await fetch('/portal/checkin/status');
+                    return await r.json();
+                }''')
+                sd = (status.get('data') or {})
+
+                # 获取账号信息
+                info = await page.evaluate('''async () => {
+                    const r = await fetch('/portal/info');
+                    return await r.json();
+                }''')
+                inf = (info.get('data') or {})
+
+                # 获取最近签到记录
+                last_used = inf.get('lastUsedAt', '')
+
+                return {
+                    "balance": inf.get('balanceUsd', 0),
+                    "gift_balance": inf.get('giftBalanceUsd', 0),
+                    "total_cost": inf.get('totalCostUsd', 0),
+                    "streak": sd.get('currentStreak', 0),
+                    "total_checkins": sd.get('totalCheckins', 0),
+                    "checked_today": sd.get('checkedInToday', False),
+                    "last_used": last_used,
+                    "models": inf.get('allowModels', ''),
+                    "status": inf.get('status', ''),
+                    "expires_at": inf.get('expiresAt', ''),
+                    "calendar": sd.get('calendar', []),
+                    "next_milestone": sd.get('nextMilestone', 0),
+                    "next_bonus": sd.get('nextMilestoneBonus', 0),
+                    "email_bound": sd.get('emailBound', False),
+                }
+            finally:
+                await browser.close()
 
     # ==================== 签到核心 ====================
     def do_checkin_all(self) -> list:
@@ -222,6 +425,22 @@ class QtCoolCheckin(_PluginBase):
             except Exception as e:
                 logger.error(f"[QtCoolCheckin] {masked} 签到异常: {e}")
                 results.append({"success": False, "key_masked": masked, "msg": str(e)})
+
+        # 缓存最新状态
+        success_count = sum(1 for r in results if r.get("success"))
+        if success_count > 0 and keys:
+            try:
+                import asyncio as _aio
+                loop = _aio.new_event_loop()
+                info = loop.run_until_complete(self._fetch_account_info(keys[0]))
+                loop.close()
+                if info:
+                    self._cached_balance = info.get("balance", 0)
+                    self._cached_streak = info.get("streak", 0)
+                    self._cached_total = info.get("total_checkins", 0)
+                    self._cached_checked = info.get("checked_today", False)
+            except Exception:
+                pass
 
         # 发送通知
         if self._notify and results:
