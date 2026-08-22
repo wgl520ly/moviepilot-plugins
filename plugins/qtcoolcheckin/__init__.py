@@ -244,8 +244,8 @@ class QtCoolCheckin(_PluginBase):
                              "events": {"click": {"api": "plugin/QtCoolCheckin/status" + params, "method": "get"}}},
                         ]},
                         {"component": "VCol", "props": {"cols": 12, "sm": 4}, "content": [
-                            {"component": "VBtn", "props": {"color": "primary", "block": True, "variant": "outlined", "prepend-icon": "mdi-cog", "href": "/?tab=plugin-setting"},
-                             "text": "配置"},
+                            {"component": "VBtn", "props": {"color": "primary", "block": True, "variant": "outlined", "prepend-icon": "mdi-open-in-new", "href": "https://gpt.qt.cool/checkin", "target": "_blank"},
+                             "text": "官网签到页"},
                         ]},
                     ]},
                 ],
