@@ -37,7 +37,7 @@ class WakeOnLan(_PluginBase):
 
     plugin_name = "局域网远程唤醒 (WakeOnLan)"
     plugin_desc = "通过 Wake-on-LAN 魔术包远程唤醒局域网内电脑/设备；支持多设备、插件按钮、聊天命令、HTTP 接口与定时自动开机"
-    plugin_version = "0.1.0"
+    plugin_version = "0.1.1"
     plugin_author = "wgl520ly"
     author_url = "https://github.com/wgl520ly"
     repo_url = "https://github.com/wgl520ly/moviepilot-plugins"

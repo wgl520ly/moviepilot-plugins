@@ -76,7 +76,7 @@
   "WakeOnLan": {
     "name": "局域网远程唤醒 (WakeOnLan)",
     "description": "通过 Wake-on-LAN 魔术包远程唤醒局域网内电脑/设备；支持多设备、插件按钮、聊天命令、HTTP 接口与定时自动开机",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "author": "wgl520ly",
     "labels": [
       "工具",
@@ -86,13 +86,14 @@
     "release": true,
     "icon": "https://raw.githubusercontent.com/wgl520ly/moviepilot-plugins/main/icons/WakeOnLan.png",
     "history": {
-      "0.1.0": "首发：局域网远程唤醒（WOL 魔术包）；多设备表格管理（唤醒/删除按钮）、聊天命令 /wol /wol_list、HTTP 接口 wake/wake_all/devices/device_add/device_remove、定时自动开机、IP 在线探测、站内通知"
+      "0.1.0": "首发：设备表格一键唤醒/删除，添加设备表单直通API",
+      "0.1.1": "修复：get_page变量作用域、get_form返回元组"
     }
   },
   "QtCoolCheckin": {
     "name": "晴辰云签到 (QtCoolCheckin)",
     "description": "Playwright + ddddocr 自动签到晴辰云 gpt.qt.cool，多账号、滑动验证码自动识别",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "author": "wgl520ly",
     "labels": [
       "工具",
@@ -102,13 +103,14 @@
     "release": true,
     "icon": "https://raw.githubusercontent.com/wgl520ly/moviepilot-plugins/main/icons/QtCoolCheckin.png",
     "history": {
-      "0.1.0": "首发：Playwright + ddddocr 自动签到晴辰云，多账号，滑动验证码自动识别"
+      "0.1.0": "首发：Playwright + ddddocr 滑动验证码签到",
+      "0.2.0": "重写：API直连签到 + edge-detect缺口识别(PIL+numpy) + asyncio事件循环修复 + 详情页余额/连续天数/累计签到仪表盘 + 配置按钮改官网外链"
     }
   },
   "GemaiCheckIn": {
     "name": "哈基米API站签到 (GemaiCheckIn)",
     "description": "自动签到 api.gemai.cc，多账号，纯 HTTP 无浏览器依赖",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "author": "wgl520ly",
     "labels": [
       "签到",
@@ -118,7 +120,8 @@
     "release": true,
     "icon": "https://raw.githubusercontent.com/wgl520ly/moviepilot-plugins/main/icons/GemaiCheckIn.png",
     "history": {
-      "0.1.0": "首发：纯HTTP签到，多账号，余额/额度/签到状态详情页"
+      "0.1.0": "首发：纯HTTP签到，多账号，余额/额度详情页",
+      "0.1.1": "修复：¥余额显示(500K额度=¥1)、今日已签到视为成功"
     }
   }
 }

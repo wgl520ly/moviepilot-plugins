@@ -38,7 +38,7 @@ class QtCoolCheckin(_PluginBase):
     plugin_name = "QtCoolCheckin"
     plugin_name_cn = "晴辰云签到"
     plugin_desc = "自动签到 gpt.qt.cool（晴辰云），Playwright + ddddocr 解决滑动验证码"
-    plugin_version = "0.1.0"
+    plugin_version = "0.2.0"
     plugin_author = "wgl520ly"
     plugin_homepage = "https://github.com/wgl520ly/moviepilot-plugins"
     plugin_label = "工具"
