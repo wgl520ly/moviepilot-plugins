@@ -68,6 +68,15 @@ class GemaiCheckIn(_PluginBase):
 
         if self._onlyonce:
             self._onlyonce = False
+            # 持久化 onlyonce=false 防止热重载重复触发
+            self.update_config({
+                "enabled": self._enabled,
+                "cron": self._cron,
+                "notify": self._notify,
+                "accounts": self._accounts,
+                "onlyonce": False,
+                "timeout": self._timeout,
+            })
             try:
                 self.do_checkin_all()
             except Exception:

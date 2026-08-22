@@ -90,6 +90,15 @@ class QtCoolCheckin(_PluginBase):
                 logger.error(f"[QtCoolCheckin] 注册定时任务失败: {e}")
         if self._onlyonce:
             self._onlyonce = False
+            # 持久化 onlyonce=false 防止热重载重复触发
+            self.update_config({
+                "enabled": self._enabled,
+                "cron": self._cron,
+                "keys": self._keys,
+                "notify": self._notify,
+                "onlyonce": False,
+                "timeout": self._timeout,
+            })
             logger.info("[QtCoolCheckin] 执行一次性签到...")
             try:
                 self.do_checkin_all()
