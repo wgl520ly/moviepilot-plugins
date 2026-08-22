@@ -104,5 +104,21 @@
     "history": {
       "0.1.0": "首发：Playwright + ddddocr 自动签到晴辰云，多账号，滑动验证码自动识别"
     }
+  },
+  "GemaiCheckIn": {
+    "name": "哈基米API站签到 (GemaiCheckIn)",
+    "description": "自动签到 api.gemai.cc，多账号，纯 HTTP 无浏览器依赖",
+    "version": "0.1.0",
+    "author": "wgl520ly",
+    "labels": [
+      "签到",
+      "自动"
+    ],
+    "v3": true,
+    "release": true,
+    "icon": "https://raw.githubusercontent.com/wgl520ly/moviepilot-plugins/main/icons/GemaiCheckIn.png",
+    "history": {
+      "0.1.0": "首发：纯HTTP签到，多账号，余额/额度/签到状态详情页"
+    }
   }
 }
