@@ -313,10 +313,9 @@ class QtCoolCheckin(_PluginBase):
 
         # 用第一个密钥获取状态
         try:
-            import asyncio as _aio
-            loop = _aio.new_event_loop()
-            info = loop.run_until_complete(self._fetch_account_info(keys[0]))
-            loop.close()
+            import concurrent.futures
+            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
+                info = pool.submit(asyncio.run, self._fetch_account_info(keys[0])).result(timeout=60)
             if info:
                 self._cached_balance = info.get("balance", 0)
                 self._cached_streak = info.get("streak", 0)
@@ -430,10 +429,9 @@ class QtCoolCheckin(_PluginBase):
         success_count = sum(1 for r in results if r.get("success"))
         if success_count > 0 and keys:
             try:
-                import asyncio as _aio
-                loop = _aio.new_event_loop()
-                info = loop.run_until_complete(self._fetch_account_info(keys[0]))
-                loop.close()
+                import concurrent.futures
+                with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
+                    info = pool.submit(asyncio.run, self._fetch_account_info(keys[0])).result(timeout=60)
                 if info:
                     self._cached_balance = info.get("balance", 0)
                     self._cached_streak = info.get("streak", 0)
@@ -465,10 +463,12 @@ class QtCoolCheckin(_PluginBase):
             return {"success": False, "msg": "playwright 未安装"}
 
         try:
-            loop = asyncio.new_event_loop()
-            result = loop.run_until_complete(self._async_checkin(key))
-            loop.close()
+            import concurrent.futures
+            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as pool:
+                result = pool.submit(asyncio.run, self._async_checkin(key)).result(timeout=self._timeout + 30)
             return result
+        except concurrent.futures.TimeoutError:
+            return {"success": False, "msg": "签到超时"}
         except Exception as e:
             logger.error(f"[QtCoolCheckin] 签到异常: {traceback.format_exc()}")
             return {"success": False, "msg": f"异常: {str(e)[:100]}"}
